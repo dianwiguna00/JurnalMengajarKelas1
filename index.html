@@ -377,46 +377,100 @@ window.onload = function(){
 
 async function downloadCSV(){
 
-    let kelas =
+    const kelas =
     document.getElementById(
         "kelasDownload"
     ).value;
 
     if(!kelas){
 
-        alert(
-            "Pilih kelas terlebih dahulu"
-        );
+        if(typeof Android !== "undefined"){
+            Android.showToast(
+                "Pilih kelas terlebih dahulu"
+            );
+        }else{
+            alert(
+                "Pilih kelas terlebih dahulu"
+            );
+        }
 
         return;
     }
 
     try{
 
-        let response =
+        const response =
         await fetch(
-            API + "?rekap=" + kelas
+            API + "?rekap=" +
+            encodeURIComponent(kelas)
         );
 
-        let data =
+        const data =
         await response.json();
 
         let csv = "";
 
         data.forEach(row=>{
 
-            csv +=
-            row.join(";") + "\n";
+            csv += row
+                .map(v =>
+                    '"' +
+                    String(v)
+                    .replace(/"/g,'""') +
+                    '"'
+                )
+                .join(";");
+
+            csv += "\n";
 
         });
 
-        Android.downloadCSV(csv);
+        if(typeof Android !== "undefined"){
+
+            Android.downloadCSV(csv);
+
+        }else{
+
+            const blob =
+            new Blob(
+                [csv],
+                {
+                    type:"text/csv;charset=utf-8;"
+                }
+            );
+
+            const link =
+            document.createElement("a");
+
+            link.href =
+            URL.createObjectURL(blob);
+
+            link.download =
+            "Jurnal_Mengajar.csv";
+
+            document.body.appendChild(link);
+
+            link.click();
+
+            document.body.removeChild(link);
+
+            URL.revokeObjectURL(link.href);
+
+        }
 
     }catch(err){
 
-        alert(
-            "Gagal mengunduh rekap"
-        );
+        console.log(err);
+
+        if(typeof Android !== "undefined"){
+            Android.showToast(
+                "Gagal mengunduh rekap"
+            );
+        }else{
+            alert(
+                "Gagal mengunduh rekap"
+            );
+        }
 
     }
 
