@@ -377,94 +377,44 @@ window.onload = function(){
 
 async function downloadCSV(){
 
-    const kelas =
+    let kelas =
     document.getElementById(
         "kelasDownload"
     ).value;
 
     if(!kelas){
 
-        if(typeof Android !== "undefined"){
-            Android.showToast(
-                "Pilih kelas terlebih dahulu"
-            );
-        }else{
-            alert(
-                "Pilih kelas terlebih dahulu"
-            );
-        }
+        alert(
+            "Pilih kelas terlebih dahulu"
+        );
 
         return;
     }
 
     try{
 
-        const response =
+        let response =
         await fetch(
-            API + "?rekap=" +
-            encodeURIComponent(kelas)
+            API + "?rekap=" + kelas
         );
 
-        const data =
+        let data =
         await response.json();
 
         let csv = "";
 
-        data.forEach(row=>{
+        data.forEach(function(row){
 
-            csv += row
-                .map(v =>
-                    '"' +
-                    String(v)
-                    .replace(/"/g,'""') +
-                    '"'
-                )
-                .join(";");
-
-            csv += "\n";
+            csv +=
+            row.join(";") + "\n";
 
         });
 
-        if(typeof Android !== "undefined"){
+        Android.downloadCSV(csv);
 
-            Android.downloadCSV(csv);
+    }catch(err){
 
-        }else{
-
-            const blob =
-            new Blob(
-                [csv],
-                {
-                    type:"text/csv;charset=utf-8;"
-                }
-            );
-
-            const link =
-            document.createElement("a");
-
-            link.href =
-            URL.createObjectURL(blob);
-
-            link.download =
-            "Jurnal_Mengajar.csv";
-
-            document.body.appendChild(link);
-
-            link.click();
-
-            document.body.removeChild(link);
-
-            URL.revokeObjectURL(link.href);
-
-        }
-
-catch(err){
-
-    console.log(err);
-
-    alert(err.toString());
-
-}
+        alert(err.toString());
 
     }
 
