@@ -375,13 +375,27 @@ window.onload = function(){
 
 // ================= DOWNLOAD =================
 
-    async function downloadCSV(){
+async function downloadCSV(){
+
+    let kelas =
+    document.getElementById(
+        "kelasDownload"
+    ).value;
+
+    if(!kelas){
+
+        alert(
+            "Pilih kelas terlebih dahulu"
+        );
+
+        return;
+    }
 
     try{
 
         let response =
         await fetch(
-            API + "?rekap=JURNAL"
+            API + "?rekap=" + kelas
         );
 
         let data =
@@ -389,29 +403,56 @@ window.onload = function(){
 
         let csv = "";
 
-data.forEach(row=>{
+        data.forEach(row=>{
 
-    csv +=
-    row.join(";") + "\n";
+            csv +=
+            row.join(";") + "\n";
 
-});
+        });
 
-alert("Jumlah karakter: " + csv.length);
+        // Jika aplikasi Android
+        if(typeof Android !== "undefined"){
 
-alert("Android = " + typeof Android);
+            Android.downloadCSV(csv);
 
-if(typeof Android !== "undefined"){
+        }
 
-    alert(
-        "downloadCSV = " +
-        typeof Android.downloadCSV
-    );
+        // Jika browser biasa
+        else{
+
+            let blob = new Blob(
+                [csv],
+                {type:"text/csv;charset=utf-8;"}
+            );
+
+            let link =
+            document.createElement("a");
+
+            link.href =
+            URL.createObjectURL(blob);
+
+            link.download =
+            "Jurnal Mengajar.csv";
+
+            document.body.appendChild(link);
+
+            link.click();
+
+            document.body.removeChild(link);
+
+        }
+
+    }catch(err){
+
+        console.log(err);
+
+        alert(
+            "Gagal mengunduh rekap"
+        );
+
+    }
 
 }
-
-Android.downloadCSV(csv);
-
-
 
 </script>
 
