@@ -409,9 +409,41 @@ async function downloadCSV(){
 
         });
 
-        Android.downloadCSV(csv);
+        // Jika aplikasi Android
+        if(typeof Android !== "undefined"){
+
+            Android.downloadCSV(csv);
+
+        }
+
+        // Jika browser biasa
+        else{
+
+            let blob = new Blob(
+                [csv],
+                {type:"text/csv;charset=utf-8;"}
+            );
+
+            let link =
+            document.createElement("a");
+
+            link.href =
+            URL.createObjectURL(blob);
+
+            link.download =
+            "Jurnal Mengajar.csv";
+
+            document.body.appendChild(link);
+
+            link.click();
+
+            document.body.removeChild(link);
+
+        }
 
     }catch(err){
+
+        console.log(err);
 
         alert(
             "Gagal mengunduh rekap"
