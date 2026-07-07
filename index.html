@@ -208,7 +208,7 @@ Simpan
 
 <script>
 
-const API = "https://script.google.com/macros/s/AKfycbx1uxkxYMTnxpZz3w8IhFD1ES95LfZ2A5qLJSyk7ZXp9WT_7bQEm3aoFF50gN_2e6YpLQ/exec";
+const API = "https://script.google.com/macros/s/AKfycbxOSq093T2e_TMKVn04MXTHQGshFaEeZsCkcm1Ic9YZjdXjsKoGoNJmF_uW3Mt4bT_cyQ/exec";
 
 let dataSiswa = [];
 
@@ -389,35 +389,27 @@ window.onload = function(){
 
         let csv = "";
 
-        data.forEach(function(row){
+data.forEach(row=>{
 
-            let bersih = row.map(function(item){
+    csv +=
+    row.join(";") + "\n";
 
-                return String(item)
-                .replace(/\r/g," ")
-                .replace(/\n/g," ");
+});
 
-            });
+alert("Jumlah karakter: " + csv.length);
 
-            csv +=
-            bersih.join(";") + "\r\n";
+alert("Android = " + typeof Android);
 
-        });
+if(typeof Android !== "undefined"){
 
-        alert(
-            "Jumlah karakter: " +
-            csv.length
-        );
-
-        Android.downloadCSV(csv);
-
-    }catch(err){
-
-        alert(err.toString());
-
-    }
+    alert(
+        "downloadCSV = " +
+        typeof Android.downloadCSV
+    );
 
 }
+
+Android.downloadCSV(csv);
 
 
 
