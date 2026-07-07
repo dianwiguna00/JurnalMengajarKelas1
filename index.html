@@ -403,26 +403,32 @@ async function downloadCSV(){
 
         let csv = "";
 
-        data.forEach(row=>{
+        data.forEach(function(row){
 
             csv +=
             row.join(";") + "\n";
 
         });
 
-        // Jika aplikasi Android
-        if(typeof Android !== "undefined"){
+        // Android WebView
+        if(
+            typeof Android !== "undefined" &&
+            typeof Android.downloadCSV === "function"
+        ){
 
             Android.downloadCSV(csv);
 
         }
 
-        // Jika browser biasa
+        // Browser biasa
         else{
 
             let blob = new Blob(
                 [csv],
-                {type:"text/csv;charset=utf-8;"}
+                {
+                    type:
+                    "text/csv;charset=utf-8;"
+                }
             );
 
             let link =
@@ -432,22 +438,25 @@ async function downloadCSV(){
             URL.createObjectURL(blob);
 
             link.download =
-            "Jurnal Mengajar.csv";
+            "Jurnal_" + kelas + ".csv";
 
-            document.body.appendChild(link);
+            document.body.appendChild(
+                link
+            );
 
             link.click();
 
-            document.body.removeChild(link);
+            document.body.removeChild(
+                link
+            );
 
         }
 
     }catch(err){
 
-        console.log(err);
-
         alert(
-            "Gagal mengunduh rekap"
+            "Error : " +
+            err.toString()
         );
 
     }
