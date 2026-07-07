@@ -390,8 +390,7 @@ async function downloadCSV(){
 
         data.forEach(row=>{
 
-            csv +=
-            row.join(";") + "\n";
+csv += row.join(";") + "\r\n";
 
         });
 
