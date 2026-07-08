@@ -39,6 +39,12 @@ button{
     cursor:pointer;
 }
 
+.table-container{
+    overflow:auto;
+    max-width:100%;
+    max-height:80vh;
+}
+
 table{
     border-collapse:collapse;
     width:auto;
@@ -54,6 +60,9 @@ td{
 th{
     background:#0d6efd;
     color:white;
+    position:sticky;
+    top:0;
+    z-index:10;
 }
 
 .nama{
@@ -63,10 +72,41 @@ th{
     font-size:20px;
 }
 
-.h{background:#198754;color:white;}
-.s{background:#ffc107;}
-.i{background:#0dcaf0;color:white;}
-.a{background:#dc3545;color:white;}
+.sticky-no{
+    position:sticky;
+    left:0;
+    background:white;
+    z-index:5;
+}
+
+th.sticky-no{
+    position:sticky;
+    left:0;
+    top:0;
+    background:#0d6efd;
+    color:white;
+    z-index:20;
+}
+
+.h{
+    background:#198754;
+    color:white;
+}
+
+.s{
+    background:#ffc107;
+}
+
+.i{
+    background:#0dcaf0;
+    color:white;
+}
+
+.a{
+    background:#dc3545;
+    color:white;
+}
+
 .h,
 .s,
 .i,
@@ -80,6 +120,7 @@ th{
     border:none;
     border-radius:6px;
 }
+
 .active{
     outline:3px solid black;
 }
@@ -186,12 +227,14 @@ Simpan
 📥 Download
 </button>
 </div>
-
+    
+<div style="overflow:auto">
+<div class="table-container">
 <table>
 
 <thead>
 <tr>
-<th>No</th>
+<th class="sticky-no">No</th>
 <th>NIS</th>
 <th>Nama</th>
 <th>L/P</th>
@@ -205,7 +248,9 @@ Simpan
 <tbody id="tbody"></tbody>
 
 </table>
-
+</div>
+</div>
+    
 <script>
 
 const API = "https://script.google.com/macros/s/AKfycbz1ghySYmF_bP0GzkT1H2aMmPFNygG3uihm7lHC4c0DnLUhU_Zl-kln_Y70pPcklWYxLQ/exec";
@@ -247,7 +292,7 @@ function render(){
         html += `
         <tr>
 
-        <td>${s.no}</td>
+        <td class="sticky-no">${s.no}</td>
 
         <td>${s.nis}</td>
 
